@@ -4,7 +4,7 @@ let projectileVelocity = 0;
 let projectileActive = false;
 let cooldown = 0;
 let time = 0;
-let enemy = [];
+let enemy = new Group();
 let enemySpeed = 2;
 
 function  preload(){
@@ -14,6 +14,7 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   noCursor();
   frameRate(60);
+  enemy.
 }
 function draw() {
   clear();
@@ -63,7 +64,7 @@ function draw() {
 }
 
 function enemySpawn(){
-  for(let i = 1; i < random(4,6); i++){
+  for(let i = 1; i < random(3,5); i++){
     
   }
 }
