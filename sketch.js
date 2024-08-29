@@ -4,7 +4,6 @@ let projectileVelocity = 0;
 let projectileActive = false;
 let cooldown = 0;
 let time = 0;
-let enemy = new Group();
 let enemySpeed = 2;
 
 function  preload(){
@@ -14,7 +13,16 @@ function setup() {
 	createCanvas(windowWidth, windowHeight);
 	noCursor();
 	frameRate(60);
-	enemy.sprite 
+  enemy = new Sprite();
+	enemy.diameter = 25
+  enemy.x = windowWidth - 50;
+  //projectile
+  projectile = new Sprite();
+  projectile.color = 'grey';
+  projectile.stroke = 'black';
+  projectile.x = 85;
+  projectile.y = mouseY;
+  projectile.diameter = 25;
 }
 function draw() {
 	clear();
@@ -51,14 +59,12 @@ function draw() {
     }
     
     if(projectileActive === true){
-    //projectile
-    stroke('black');
-    fill('grey');
-    circle(projectileX, projectileVelocity, 25)
+    projectile.x = projectileX;
+    projectile.y = projectileVelocity;
     projectileX += projectileSpeed;
     if(projectileX >= windowWidth){
-    	projectileActive = false;
-    	projectileX = 0;
+      projectileActive = false;
+      projectileX = 0;
     }
     }
 }
