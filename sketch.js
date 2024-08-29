@@ -14,7 +14,7 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   noCursor();
   frameRate(60);
-  enemy.
+  enemy.sprite
 }
 function draw() {
   clear();
