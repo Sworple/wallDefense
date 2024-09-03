@@ -1,6 +1,7 @@
 let projSpeed = 5;
-let enemySpeed = 2;
-let projectile, badGuy, proj, enemy;
+let projectile, badGuy, proj, enemy, explosion;
+let boomX = -500;
+let boomY = 0;
 let time = 0;
 let score = 0;
 
@@ -14,6 +15,7 @@ function setup() {
   //turret
   turret = new Sprite();
   turret.fill = 'orange';
+  turret.stroke = 'black';
   turret.diameter = 90;
 
   //projectile setup
@@ -24,11 +26,11 @@ function setup() {
   proj.speed = projSpeed;
   proj.mass = 500;
 
-
   enemy = new Group();
-  enemy.diameter = 30;
+  enemy.stroke = 'black';
+  enemy.diameter = 35;
   enemy.direction = 180;
-  enemy.speed = enemySpeed;
+  enemy.speed = random(1, 4);
 
   //not calling enemySpawn in the setup breaks the game.
   //don't ask me how, i don't know either.
@@ -43,24 +45,30 @@ function draw() {
   fill('orange')
 	stroke('orange')
 	rect(0, mouseY-15, 90, 30)
+  //score
 	stroke('black');
     fill('black');
     textSize(10);
     textFont('Comic Sans MS')
     text(score, 50, mouseY+5)
     circle(90, mouseY, 30)
+    //explosion
+    stroke('red');
+    fill('red');
+    circle(boomX, boomY, 100);
 
     if(frameCount === 60){
     frameCount = 0;
     time++
     }
-    if(time === 4){
+    if(time === 3){
     time = 0;
     enemySpawn();
     }
     if(mouse.presses()){
       projectileSpawn();
     }
+    boomX = -500;
 }
 function projectileSpawn(){
   projectile = new proj.Sprite();
@@ -75,7 +83,9 @@ function enemySpawn(){
     badGuy.y = random(50, canvas.h-50);
   }
 }
-function scoreUp(){
+function scoreUp(projectile, badGuy){
+  boomX = badGuy.x;
+  boomY = badGuy.y;
   projectile.remove();
   badGuy.remove();
   score++;
