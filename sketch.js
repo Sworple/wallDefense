@@ -30,11 +30,10 @@ function setup() {
   enemy.stroke = 'black';
   enemy.diameter = 35;
   enemy.direction = 180;
-  enemy.speed = random(1, 15);
+  enemy.speed = random(1, 4);
 
-  //not calling enemySpawn in the setup breaks the game.
-  //don't ask me how, i don't know either.
   enemySpawn();
+
   proj.collided(enemy, scoreUp);
 }
 function draw() {
@@ -79,7 +78,7 @@ function projectileSpawn(){
 
 }
 function enemySpawn(){
-  for(let i = 1; i < random(1,3); i++){
+  for(let i = 1; i < random(1,4); i++){
     badGuy = new enemy.Sprite();
     badGuy.x = canvas.w + (random(50, 100));
     badGuy.y = random(50, canvas.h-50);
