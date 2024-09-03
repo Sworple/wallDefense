@@ -30,7 +30,7 @@ function setup() {
   enemy.stroke = 'black';
   enemy.diameter = 35;
   enemy.direction = 180;
-  enemy.speed = random(1, 4);
+  enemy.speed = random(1, 15);
 
   //not calling enemySpawn in the setup breaks the game.
   //don't ask me how, i don't know either.
@@ -48,20 +48,22 @@ function draw() {
   //score
 	stroke('black');
     fill('black');
-    textSize(10);
-    textFont('Comic Sans MS')
-    text(score, 50, mouseY+5)
     circle(90, mouseY, 30)
+    textSize(25);
+    textFont('Comic Sans MS')
+    fill('white');
+    text(score, 20, 30)
+    
     //explosion
     stroke('red');
     fill('red');
     circle(boomX, boomY, 100);
 
-    if(frameCount === 60){
+    if(frameCount == 60){
     frameCount = 0;
     time++
     }
-    if(time === 3){
+    if(time === 2){
     time = 0;
     enemySpawn();
     }
