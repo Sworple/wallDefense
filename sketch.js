@@ -1,19 +1,26 @@
 let projSpeed = 5;
-let projectile, badGuy, proj, enemy, explosion;
+let projectile, badGuy, proj, enemy;
+let turretImg;
 let boomX = -500;
 let boomY = 0;
 let time = 0;
 let score = 0;
+let lives = 3;
 
 function  preload(){
-
+  turretImg = loadImage('/assets/turret.png')
 }
 function setup() {
 	Canvas('16:9');
 	noCursor();
 	frameRate(60);
+  //the wall you defend
+  wall = new Sprite();
+
   //turret
   turret = new Sprite();
+  turret.image;
+  turret.collider = 'none';
   turret.fill = 'orange';
   turret.stroke = 'black';
   turret.diameter = 90;
@@ -44,32 +51,31 @@ function draw() {
   fill('orange')
 	stroke('orange')
 	rect(0, mouseY-15, 90, 30)
-  //score
 	stroke('black');
-    fill('black');
-    circle(90, mouseY, 30)
-    textSize(25);
-    textFont('Comic Sans MS')
-    fill('white');
-    text(score, 20, 30)
-    
-    //explosion
-    stroke('red');
-    fill('red');
-    circle(boomX, boomY, 100);
+  fill('black');
+  circle(90, mouseY, 30);
+  fill('white');
+  textSize(25);
+  textFont('Comic Sans MS')
+  text(score, 20, 30)
+  
+  //explosion
+  stroke('red');
+  fill('red');
+  circle(boomX, boomY, 100);
 
-    if(frameCount == 60){
+  if(frameCount == 60){
     frameCount = 0;
     time++
-    }
-    if(time === 2){
+  }
+  if(time === 2){
     time = 0;
     enemySpawn();
-    }
-    if(mouse.presses()){
-      projectileSpawn();
-    }
-    boomX = -500;
+  }
+  if(mouse.presses()){
+    projectileSpawn();
+  }
+  boomX = -500;
 }
 function projectileSpawn(){
   projectile = new proj.Sprite();
