@@ -3,7 +3,7 @@ let projectile, badGuy, proj, enemy;
 let turretImg;
 let boomX = -500;
 let boomY = 0;
-let enemyY;
+let gameOverX = -500;
 let time = 0;
 let score = 0;
 let lives = 3;
@@ -31,6 +31,7 @@ function setup() {
   turret.image = turretImg;
   turret.image.scale = 1;
   turret.collider = 'none';
+  turret.pixelPerfect = true;
   turret.fill = 'orange';
   turret.stroke = 'black';
   turret.x = 10;
@@ -38,13 +39,18 @@ function setup() {
 
   //projectile setup
   proj = new Group();
+  proj.image = '🔥';
+  proj.image.scale = 3;
   proj.color = 'grey';
   proj.stroke = 'black';
   proj.diameter = 30;
   proj.speed = projSpeed;
   proj.mass = 500;
+  proj.attractTo(enemy, 5)
 
   enemy = new Group();
+  enemy.image = '💣';
+  enemy.image.scale = 5;
   enemy.stroke = 'black';
   enemy.diameter = 35;
   enemy.direction = 180;
@@ -65,6 +71,12 @@ function draw() {
   textFont('Comic Sans MS')
   text(score, 90, 30)
   text(lives, 30, 30)
+  stroke('red');
+  fill('red')
+  text('game over', gameOverX, canvas.hh)
+
+  enemySpawn();
+  projectileSpawn();
   
   //explosion
   stroke('red');
@@ -74,12 +86,12 @@ function draw() {
   if(frameCount == 60){
     frameCount = 0;
     time++
+    if(time == 3){
+      time = 0;
+      enemySpawn();
+    }
   }
-  if(time === 2){
-    time = 0;
-    enemySpawn();
-  }
-  if(mouse.presses()){
+  if(mouse.presses() & lives > 0){
     projectileSpawn();
   }
   boomX = -500;
@@ -94,7 +106,7 @@ function enemySpawn(){
   for(let i = 1; i < random(1,4); i++){
     badGuy = new enemy.Sprite();
     badGuy.x = canvas.w + (random(50, 150));
-    badGuy.y = enemyY;
+    badGuy.y = random(canvas.h-50, 0);
   }
 }
 function scoreUp(projectile, badGuy){
@@ -105,8 +117,17 @@ function scoreUp(projectile, badGuy){
   score++;
 }
 function wallHurt(wall, badGuy){
-  wall.fill = 'red';
   badGuy.remove();
-  lives--;
-  wall.fill = 'orange';
+  if(lives > 0){
+    lives -= 1;
+  }
+  if(lives == 0){
+    gameOver()
+  }
+}
+function gameOver(){
+  gameOverX = canvas.hw;
+  enemy.remove();
+  wall.remove();
+  turret.remove();
 }
