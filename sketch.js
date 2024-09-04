@@ -1,9 +1,10 @@
 let projSpeed = 5;
-let projectile, badGuy, proj, enemy;
+let projectile, proj, enemy, badGuy;
 let turretImg;
 let boomX = -500;
 let boomY = 0;
 let gameOverX = -500;
+let isGameOver = false;
 let time = 0;
 let score = 0;
 let lives = 3;
@@ -15,6 +16,7 @@ function setup() {
 	Canvas('16:9');
 	noCursor();
 	frameRate(60);
+
   //the wall you defend
   wall = new Sprite();
   wall.allowSleeping = false;
@@ -39,15 +41,16 @@ function setup() {
 
   //projectile setup
   proj = new Group();
-  proj.image = '🔥';
+  proj.image = '➡️';
   proj.image.scale = 3;
   proj.color = 'grey';
   proj.stroke = 'black';
   proj.diameter = 30;
+  proj.x = 65;
   proj.speed = projSpeed;
   proj.mass = 500;
-  proj.attractTo(enemy, 5)
 
+  //enemy
   enemy = new Group();
   enemy.image = '💣';
   enemy.image.scale = 5;
@@ -72,18 +75,15 @@ function draw() {
   text(score, 90, 30)
   text(lives, 30, 30)
   stroke('red');
-  fill('red')
+  fill('red');
   text('game over', gameOverX, canvas.hh)
-
-  enemySpawn();
-  projectileSpawn();
   
   //explosion
   stroke('red');
   fill('red');
   circle(boomX, boomY, 100);
 
-  if(frameCount == 60){
+  if(frameCount == 60 & isGameOver === false){
     frameCount = 0;
     time++
     if(time == 3){
@@ -99,8 +99,6 @@ function draw() {
 function projectileSpawn(){
   projectile = new proj.Sprite();
   projectile.y = mouseY;
-  projectile.x = 65;
-
 }
 function enemySpawn(){
   for(let i = 1; i < random(1,4); i++){
@@ -127,7 +125,8 @@ function wallHurt(wall, badGuy){
 }
 function gameOver(){
   gameOverX = canvas.hw;
-  enemy.remove();
-  wall.remove();
+  isGameOver = true;
   turret.remove();
+  wall.remove();
+  enemy.remove();
 }
