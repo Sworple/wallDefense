@@ -3,12 +3,13 @@ let projectile, badGuy, proj, enemy;
 let turretImg;
 let boomX = -500;
 let boomY = 0;
+let enemyY;
 let time = 0;
 let score = 0;
 let lives = 3;
 
 function  preload(){
-  turretImg = loadImage('/assets/turret.png')
+  turretImg = loadImage('turret.png')
 }
 function setup() {
 	Canvas('16:9');
@@ -16,13 +17,23 @@ function setup() {
 	frameRate(60);
   //the wall you defend
   wall = new Sprite();
+  wall.allowSleeping = false;
+  wall.collider = 'static'
+  wall.x = -5;
+  wall.y = canvas.hh;
+  wall.height = canvas.h;
+  wall.width = 50;
+  wall.stroke = 'black';
+  wall.fill = 'orange';
 
   //turret
   turret = new Sprite();
-  turret.image;
+  turret.image = turretImg;
+  turret.image.scale = 1;
   turret.collider = 'none';
   turret.fill = 'orange';
   turret.stroke = 'black';
+  turret.x = 10;
   turret.diameter = 90;
 
   //projectile setup
@@ -42,22 +53,18 @@ function setup() {
   enemySpawn();
 
   proj.collided(enemy, scoreUp);
+  wall.collided(enemy, wallHurt);
 }
 function draw() {
 	clear();
 	background(0,0,75);
-  turret.x = 0;
   turret.y = mouseY;
-  fill('orange')
-	stroke('orange')
-	rect(0, mouseY-15, 90, 30)
-	stroke('black');
-  fill('black');
-  circle(90, mouseY, 30);
+  stroke('white');
   fill('white');
   textSize(25);
   textFont('Comic Sans MS')
-  text(score, 20, 30)
+  text(score, 90, 30)
+  text(lives, 30, 30)
   
   //explosion
   stroke('red');
@@ -80,14 +87,14 @@ function draw() {
 function projectileSpawn(){
   projectile = new proj.Sprite();
   projectile.y = mouseY;
-  projectile.x = 90;
+  projectile.x = 65;
 
 }
 function enemySpawn(){
   for(let i = 1; i < random(1,4); i++){
     badGuy = new enemy.Sprite();
-    badGuy.x = canvas.w + (random(50, 100));
-    badGuy.y = random(50, canvas.h-50);
+    badGuy.x = canvas.w + (random(50, 150));
+    badGuy.y = enemyY;
   }
 }
 function scoreUp(projectile, badGuy){
@@ -96,4 +103,10 @@ function scoreUp(projectile, badGuy){
   projectile.remove();
   badGuy.remove();
   score++;
+}
+function wallHurt(wall, badGuy){
+  wall.fill = 'red';
+  badGuy.remove();
+  lives--;
+  wall.fill = 'orange';
 }
