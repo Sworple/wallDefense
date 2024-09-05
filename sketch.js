@@ -5,9 +5,11 @@ let boomX = -500;
 let boomY = 0;
 let gameOverX = -500;
 let isGameOver = false;
+let inShop = false;
 let time = 0;
 let score = 0;
 let lives = 3;
+let highScore = 0;
 
 function  preload(){
   turretImg = loadImage('turret.png')
@@ -16,6 +18,7 @@ function setup() {
 	Canvas('16:9');
 	noCursor();
 	frameRate(60);
+  getItem('highScore')
 
   //the wall you defend
   wall = new Sprite();
@@ -41,13 +44,12 @@ function setup() {
 
   //projectile setup
   proj = new Group();
-  proj.image = '➡️';
+  proj.image = '🔥';
   proj.image.scale = 3;
-  proj.color = 'grey';
-  proj.stroke = 'black';
+  proj.rotationSpeed = 20;
   proj.diameter = 30;
   proj.x = 65;
-  proj.speed = projSpeed;
+  proj.vel.x = projSpeed;
   proj.mass = 500;
 
   //enemy
@@ -72,7 +74,7 @@ function draw() {
   fill('white');
   textSize(25);
   textFont('Comic Sans MS')
-  text(score, 90, 30)
+  text(score, 50, 50)
   text(lives, 30, 30)
   stroke('red');
   fill('red');
@@ -83,9 +85,21 @@ function draw() {
   fill('red');
   circle(boomX, boomY, 100);
 
+  if(isGameOver === true){
+    highScore = score;
+    storeItem(highScore, score)
+    stroke('red');
+    fill('red');
+    text('game over', gameOverX, canvas.hh)
+    text('score: ${score}', gameOverX-50, canvas.hh-50)
+    text('highscore: ${highScore}', gameOverX+50, canvas.hh-50)
+  }
   if(frameCount == 60 & isGameOver === false){
     frameCount = 0;
-    time++
+    //pause the timer system when in shop
+    if(inShop === false){
+      time++
+      }
     if(time == 3){
       time = 0;
       enemySpawn();
