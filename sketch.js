@@ -1,5 +1,7 @@
 let projSpeed = 5;
 let projectile, proj, enemy, badGuy;
+let projScale = 3;
+let enemyScale = 5;
 let turretImg;
 let boomX = -500;
 let boomY = 0;
@@ -31,7 +33,7 @@ function setup() {
   wall.stroke = 'black';
   wall.fill = 'orange';
 
-  //turret
+  //turret that spits fireballs
   turret = new Sprite();
   turret.image = turretImg;
   turret.collider = 'none';
@@ -41,29 +43,32 @@ function setup() {
   turret.x = 10;
   turret.diameter = 90;
 
-  //projectile setup
+  //fireball setup
   proj = new Group();
   proj.image = '🔥';
-  proj.image.scale = 3;
-  proj.rotationSpeed = 20;
+  proj.image.scale = projScale;
+  proj.rotationSpeed = 40;
   proj.diameter = 30;
   proj.x = 65;
   proj.vel.x = projSpeed;
   proj.mass = 500;
 
-  //enemy
+  //enemy setup
   enemy = new Group();
   enemy.image = '💣';
-  enemy.image.scale = 5;
+  enemy.image.scale = enemyScale;
+  enemy.image.offset.y = -1
+  enemy.image.offset.x = 1;
   enemy.stroke = 'black';
-  enemy.diameter = 35;
+  enemy.diameter = 50;
   enemy.direction = 180;
-  enemy.speed = random(1, 4);
 
   enemySpawn();
 
   proj.collided(enemy, scoreUp);
   wall.collided(enemy, wallHurt);
+  projScale = 1;
+  enemyScale = 1;
 }
 function draw() {
 	clear();
@@ -118,6 +123,7 @@ function enemySpawn(){
     badGuy = new enemy.Sprite();
     badGuy.x = canvas.w + (random(50, 150));
     badGuy.y = random(canvas.h-50, 0);
+    badGuy.speed = random(1,4);
   }
 }
 function scoreUp(projectile, badGuy){
@@ -141,8 +147,6 @@ function gameOver(){
   highScore = score;
   isGameOver = true;
   storeItem('highScore', highScore)
-  turret.x = -500;
-  wall.x = -500;
   enemy.remove();
   proj.remove();
 }
@@ -154,6 +158,4 @@ function restart(){
   time = 0;
   score = 0;
   lives = 3;
-  turret.x = 10;
-  wall.x = -5;
 }
