@@ -9,7 +9,7 @@ let inShop = false;
 let time = 0;
 let score = 0;
 let lives = 3;
-let highScore = 0;
+let highScore;
 
 function  preload(){
   turretImg = loadImage('turret.png')
@@ -18,7 +18,7 @@ function setup() {
 	Canvas('16:9');
 	noCursor();
 	frameRate(60);
-  getItem('highScore')
+  highScore = getItem('highScore');
 
   //the wall you defend
   wall = new Sprite();
@@ -34,7 +34,6 @@ function setup() {
   //turret
   turret = new Sprite();
   turret.image = turretImg;
-  turret.image.scale = 1;
   turret.collider = 'none';
   turret.pixelPerfect = true;
   turret.fill = 'orange';
@@ -73,40 +72,40 @@ function draw() {
   stroke('white');
   fill('white');
   textSize(25);
-  textFont('Comic Sans MS')
-  text(score, 50, 50)
-  text(lives, 30, 30)
+  textAlign(LEFT, CENTER);
+  textFont('Comic Sans MS');
+  text(`score: ${score}`, 30, canvas.h-45);
+  text(`highscore: ${highScore}`, 30, canvas.h-20)
+  text(`lives: ${lives}`, 30, 20);
   stroke('red');
   fill('red');
-  text('game over', gameOverX, canvas.hh)
+  textAlign(CENTER, CENTER);
+  text('game over', gameOverX, canvas.hh);
+  text(`score: ${score}`, gameOverX, canvas.hh+100);
+  text(`highscore: ${highScore}`, gameOverX, canvas.hh+50);
   
   //explosion
-  stroke('red');
-  fill('red');
+  //color is already set by the gameOver text
   circle(boomX, boomY, 100);
 
-  if(isGameOver === true){
-    highScore = score;
-    storeItem(highScore, score)
-    stroke('red');
-    fill('red');
-    text('game over', gameOverX, canvas.hh)
-    text('score: ${score}', gameOverX-50, canvas.hh-50)
-    text('highscore: ${highScore}', gameOverX+50, canvas.hh-50)
-  }
   if(frameCount == 60 & isGameOver === false){
     frameCount = 0;
     //pause the timer system when in shop
     if(inShop === false){
       time++
+      if(time == 3){
+        time = 0;
+        enemySpawn();
       }
-    if(time == 3){
-      time = 0;
-      enemySpawn();
     }
   }
-  if(mouse.presses() & lives > 0){
-    projectileSpawn();
+  if(mouse.presses()){
+    if(lives > 0 & isGameOver === false) {
+      projectileSpawn();
+    }
+    if(lives == 0 & isGameOver === true){
+      restart();
+    }
   }
   boomX = -500;
 }
@@ -139,8 +138,22 @@ function wallHurt(wall, badGuy){
 }
 function gameOver(){
   gameOverX = canvas.hw;
+  highScore = score;
   isGameOver = true;
-  turret.remove();
-  wall.remove();
+  storeItem('highScore', highScore)
+  turret.x = -500;
+  wall.x = -500;
   enemy.remove();
+  proj.remove();
+}
+function restart(){
+  setup();
+  gameOverX = -500; 
+  isGameOver = false;
+  frameCount = 0;
+  time = 0;
+  score = 0;
+  lives = 3;
+  turret.x = 10;
+  wall.x = -5;
 }
