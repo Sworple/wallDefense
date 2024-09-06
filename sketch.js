@@ -1,5 +1,5 @@
 let projSpeed = 5;
-let projectile, proj, enemy, badGuy;
+let projectile, proj, enemy, badGuy, wall, topWall, bottomWall;
 let turretImg;
 let boomX = -500;
 let boomY = 0;
@@ -33,6 +33,25 @@ function setup() {
   wall.width = 50;
   wall.stroke = 'black';
   wall.fill = 'orange';
+  
+  //top and bottom walls 
+  //stops the enemies from going out of bounds
+  topWall = new Sprite();
+  topWall.x = canvas.hw;
+  topWall.y = 0;
+  topWall.height = 10;
+  topWall.width = canvas.w + 50;
+  topWall.stroke = 'black';
+  topWall.fill = 'black';
+  topWall.collider = 'static';
+  bottomWall = new Sprite();
+  bottomWall.x = canvas.hw;
+  bottomWall.y = canvas.h;
+  bottomWall.height = 10;
+  bottomWall.width = canvas.w + 50;
+  bottomWall.stroke = 'black';
+  bottomWall.fill = 'black';
+  bottomWall.collider = 'static';
 
   //turret that spits fireballs
   turret = new Sprite();
@@ -58,7 +77,7 @@ function setup() {
   //enemy setup
   enemy = new Group();
   enemy.image = enemyImg;
-  enemy.scale = 0.8;
+  enemy.scale = 0.9;
   enemy.image.offset.y = -1
   enemy.image.offset.x = 1;
   enemy.diameter = 64;
@@ -77,9 +96,9 @@ function draw() {
   textSize(25);
   textAlign(LEFT, CENTER);
   textFont('Comic Sans MS');
-  text(`score: ${score}`, 30, canvas.h-45);
-  text(`highscore: ${highScore}`, 30, canvas.h-20)
-  text(`lives: ${lives}`, 30, 20);
+  text(`score: ${score}`, 30, canvas.h-50);
+  text(`highscore: ${highScore}`, 30, canvas.h-25)
+  text(`lives: ${lives}`, 30, 25);
   stroke('red');
   fill('red');
   textAlign(CENTER, CENTER);
@@ -103,7 +122,7 @@ function draw() {
       }
     }
   }
-  if(mouse.presses()){
+  if(mouse.presses() | keyboard.presses('space')){
     if(lives > 0 & isGameOver === false) {
       projectileSpawn();
     }
@@ -131,7 +150,7 @@ function enemySpawn(){
   for(let i = 1; i < random(1,4); i++){
     badGuy = new enemy.Sprite();
     badGuy.x = canvas.w + (random(50, 150));
-    badGuy.y = random(canvas.h-50, 0);
+    badGuy.y = random(canvas.h-50, 50);
     badGuy.speed = random(1.5,4);
   }
 }
