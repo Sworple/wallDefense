@@ -13,12 +13,15 @@ let highScore;
 
 function  preload(){
   turretImg = loadImage('turret.png')
+  projImg = loadImage('fireball.png')
+  enemyImg = loadImage('explosive.png')
 }
 function setup() {
 	Canvas('16:9');
 	noCursor();
 	frameRate(60);
   highScore = getItem('highScore');
+  world.allowSleeping = false;
 
   //the wall you defend
   wall = new Sprite();
@@ -44,20 +47,21 @@ function setup() {
 
   //fireball setup
   proj = new Group();
-  proj.image = '🔥';
-  proj.rotationSpeed = 40;
-  proj.diameter = 30;
+  proj.image = projImg;
+  proj.scale = 0.5;
+  proj.rotationSpeed = 5;
+  proj.diameter = 64;
   proj.x = 65;
   proj.vel.x = projSpeed;
   proj.mass = 500;
 
   //enemy setup
   enemy = new Group();
-  enemy.image = '💣';
+  enemy.image = enemyImg;
+  enemy.scale = 0.8;
   enemy.image.offset.y = -1
   enemy.image.offset.x = 1;
-  enemy.stroke = 'black';
-  enemy.diameter = 50;
+  enemy.diameter = 64;
   enemy.direction = 180;
 
   proj.collided(enemy, scoreUp);
@@ -121,13 +125,11 @@ function draw() {
 }
 function projectileSpawn(){
   projectile = new proj.Sprite();
-  projectile.image.scale = 3;
   projectile.y = mouseY;
 }
 function enemySpawn(){
   for(let i = 1; i < random(1,4); i++){
     badGuy = new enemy.Sprite();
-    badGuy.image.scale = 5;
     badGuy.x = canvas.w + (random(50, 150));
     badGuy.y = random(canvas.h-50, 0);
     badGuy.speed = random(1.5,4);
