@@ -32,26 +32,17 @@ function setup() {
   wall.height = canvas.h;
   wall.width = 50;
   wall.stroke = 'black';
+  wall.strokeWeight = 5;
   wall.fill = 'orange';
   
   //top and bottom walls 
   //stops the enemies from going out of bounds
-  topWall = new Sprite();
-  topWall.x = canvas.hw;
-  topWall.y = 0;
-  topWall.height = 10;
-  topWall.width = canvas.w + 50;
+  topWall = new Sprite(canvas.hw, 0, canvas.w + 50, 10, 'static');
   topWall.stroke = 'black';
   topWall.fill = 'black';
-  topWall.collider = 'static';
-  bottomWall = new Sprite();
-  bottomWall.x = canvas.hw;
-  bottomWall.y = canvas.h;
-  bottomWall.height = 10;
-  bottomWall.width = canvas.w + 50;
+  bottomWall = new Sprite(canvas.hw, canvas.h, canvas.w + 50, 10, 'static');
   bottomWall.stroke = 'black';
   bottomWall.fill = 'black';
-  bottomWall.collider = 'static';
 
   //turret that spits fireballs
   turret = new Sprite();
@@ -68,7 +59,7 @@ function setup() {
   proj = new Group();
   proj.image = projImg;
   proj.scale = 0.5;
-  proj.rotationSpeed = 5;
+  proj.rotationSpeed = 10;
   proj.diameter = 64;
   proj.x = 65;
   proj.vel.x = projSpeed;
@@ -134,12 +125,7 @@ function draw() {
     enemySpawn();
   }
   if(kb.x >= 30){
-    if(lives > 0){
-      lives -= 1;
-    }
-    if(lives == 0){
-      gameOver()
-    }
+    lifeLost()
   }
 }
 function projectileSpawn(){
@@ -163,20 +149,7 @@ function scoreUp(projectile, badGuy){
 }
 function wallHurt(wall, badGuy){
   badGuy.remove();
-  if(lives > 0){
-    lives -= 1;
-  }
-  if(lives == 2){
-    wall.stroke = 'red';
-  }
-  if(lives == 1){
-    wall.fill = 'red';
-  }
-  if(lives == 0){
-    wall.stroke = 'black'
-    wall.fill = 'black'
-    gameOver()
-  }
+  lifeLost();
 }
 function gameOver(){
   gameOverX = canvas.hw;
@@ -197,3 +170,20 @@ function restart(){
   score = 0;
   lives = 3;
 }
+function lifeLost(){
+    if(lives > 0){
+      lives -= 1;
+    }
+    if (lives == 2){
+      wall.stroke = 'red';
+    }
+    if (lives == 1){
+      wall.stroke = 'red';
+      wall.fill = 'red';
+    }
+    if (lives == 0){
+      wall.stroke = 'black';
+      wall.fill = 'black';
+      gameOver();
+    }
+  }
