@@ -9,6 +9,7 @@ let inShop = false;
 let time = 0;
 let score = 0;
 let lives = 3;
+let projDamage = 1;
 let highScore;
 
 function  preload(){
@@ -54,6 +55,8 @@ function setup() {
   turret.x = 10;
   turret.y = canvas.hh;
   turret.diameter = 90;
+  turret.mouse.hovers = 
+  turret.mouse.presses
 
   //fireball setup
   proj = new Group();
@@ -64,6 +67,9 @@ function setup() {
   proj.x = 65;
   proj.vel.x = projSpeed;
   proj.mass = 500;
+  //ignore the errors, works as intended.
+  //see https://p5play.org/learn/group.html?page=1
+  proj.damage => projDamage;
 
   //enemy setup
   enemy = new Group();
@@ -73,8 +79,13 @@ function setup() {
   enemy.image.offset.x = 1;
   enemy.diameter = 64;
   enemy.direction = 180;
+  //see prior link for explanation
+  enemy.x => canvas.w + (random(50, 150));
+  enemy.y => random(canvas.h-50, 50);
+  enemy.speed => random(1.5,3.5);
+  enemy.health => random(1, 3);
 
-  proj.collided(enemy, scoreUp);
+  proj.collided(enemy, enemyHit);
   wall.collided(enemy, wallHurt);
   enemySpawn();
 }
@@ -113,19 +124,20 @@ function draw() {
       }
     }
   }
-  if(mouse.presses() | keyboard.presses('space')){
-    if(lives > 0 & isGameOver === false) {
+  //prevent use of shooting/restarting/debug keys when in shop
+  if(mouse.presses() | keyboard.presses(' ') & inShop === false){
+    if(mouse.presses() & lives > 0 & isGameOver === false ) {
       projectileSpawn();
     }
-    if(lives == 0 & isGameOver === true){
+    if(mouse.presses() & lives == 0 & isGameOver === true){
       restart();
     }
-  }
-  if(kb.presses('z')){
-    enemySpawn();
-  }
-  if(kb.x >= 30){
-    lifeLost()
+    if(kb.presses('z')){
+      enemySpawn();
+    }
+    if(kb.x >= 30){
+      lifeLost()
+    }
   }
 }
 function projectileSpawn(){
@@ -135,17 +147,17 @@ function projectileSpawn(){
 function enemySpawn(){
   for(let i = 1; i < random(1,4); i++){
     badGuy = new enemy.Sprite();
-    badGuy.x = canvas.w + (random(50, 150));
-    badGuy.y = random(canvas.h-50, 50);
-    badGuy.speed = random(1.5,4);
   }
 }
-function scoreUp(projectile, badGuy){
+function enemyHit(projectile, badGuy){
   boomX = badGuy.x;
   boomY = badGuy.y;
   projectile.remove();
-  badGuy.remove();
-  score++;
+  badGuy.health - projDamage;
+  if(badGuy.health <= 0){
+    badGuy.remove()
+    score++;
+  }
 }
 function wallHurt(wall, badGuy){
   badGuy.remove();
@@ -153,7 +165,9 @@ function wallHurt(wall, badGuy){
 }
 function gameOver(){
   gameOverX = canvas.hw;
-  highScore = score;
+  if(highScore < score){
+    highScore = score;
+  }
   isGameOver = true;
   storeItem('highScore', highScore)
   enemy.removeAll();
@@ -162,6 +176,8 @@ function gameOver(){
 function restart(){
   turret.remove();
   wall.remove();
+  topWall.remove();
+  bottomWall.remove();
   setup();
   gameOverX = -500; 
   isGameOver = false;
