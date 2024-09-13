@@ -67,9 +67,6 @@ function setup() {
   proj.x = 65;
   proj.vel.x = projSpeed;
   proj.mass = 500;
-  //ignore the errors, works as intended.
-  //see https://p5play.org/learn/group.html?page=1
-  proj.damage => projDamage;
 
   //enemy setup
   enemy = new Group();
@@ -79,12 +76,6 @@ function setup() {
   enemy.image.offset.x = 1;
   enemy.diameter = 64;
   enemy.direction = 180;
-  //see prior link for explanation
-  enemy.x => canvas.w + (random(50, 150));
-  enemy.y => random(canvas.h-50, 50);
-  enemy.speed => random(1.5,3.5);
-  enemy.health => random(1, 3);
-
   proj.collided(enemy, enemyHit);
   wall.collided(enemy, wallHurt);
   enemySpawn();
@@ -146,7 +137,12 @@ function projectileSpawn(){
 }
 function enemySpawn(){
   for(let i = 1; i < random(1,4); i++){
-    badGuy = new enemy.Sprite();
+    badGuy = new enemy.Sprite();  
+    badGuy.x = canvas.w + (random(50, 150));
+    badGuy.y = random(canvas.h-50, 50);
+    badGuy.speed = random(1.5,3.5);
+    badGuy.health = random(1, 3);
+  
   }
 }
 function enemyHit(projectile, badGuy){
