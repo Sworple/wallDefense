@@ -165,12 +165,8 @@ function enemyHit(projectile, badGuy){
   boomY = badGuy.y;
   badGuy.health = badGuyHealth;
   badGuy.health - projDamage;
-<<<<<<< HEAD
   projectile.remove();
   if(badGuy.health < 0 | badGuy.health == 0){
-=======
-  if(badGuy.health == 0 | badGuy.health < 0){
->>>>>>> f6bc39b6249a12e5026ca2b77156f7dfff8b160c
     badGuy.remove()
     score++;
   }
