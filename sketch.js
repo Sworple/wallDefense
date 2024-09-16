@@ -1,6 +1,6 @@
 let projSpeed = 5;
 let projectile, proj, enemy, badGuy, wall, topWall, bottomWall;
-let turretImg;
+let turretImg, projImg, enemyImg;
 let boomX = -500;
 let boomY = 0;
 let gameOverX = -500;
@@ -11,6 +11,8 @@ let score = 0;
 let lives = 3;
 let projDamage = 1;
 let highScore;
+let enemyHealth = 1;
+let badGuyHealth = 1;
 
 function  preload(){
   turretImg = loadImage('turret.png')
@@ -19,8 +21,8 @@ function  preload(){
 }
 function setup() {
 	Canvas('16:9');
-	noCursor();
 	frameRate(60);
+  //add sprite cursor in place of this comment
   highScore = getItem('highScore');
   world.allowSleeping = false;
 
@@ -66,7 +68,8 @@ function setup() {
   proj.diameter = 64;
   proj.x = 65;
   proj.vel.x = projSpeed;
-  proj.mass = 500;
+  //enemy has more than 1 health, need them to not fly around when hit
+  proj.mass = 1;
 
   //enemy setup
   enemy = new Group();
@@ -109,9 +112,13 @@ function draw() {
     //pause the timer system when in shop
     if(inShop === false){
       time++
+      time2++
       if(time == 3){
         time = 0;
         enemySpawn();
+      }
+      if(time2 == random(3,7)){
+        enemyHealth++;
       }
     }
   }
@@ -149,16 +156,21 @@ function enemySpawn(){
     badGuy.x = canvas.w + (random(50, 150));
     badGuy.y = random(canvas.h-50, 50);
     badGuy.speed = random(1.5,3.5);
-    badGuy.health = random(1, 3);
+    badGuy.health = enemyHealth;
   
   }
 }
 function enemyHit(projectile, badGuy){
   boomX = badGuy.x;
   boomY = badGuy.y;
-  projectile.remove();
+  badGuy.health = badGuyHealth;
   badGuy.health - projDamage;
+<<<<<<< HEAD
+  projectile.remove();
+  if(badGuy.health < 0 | badGuy.health == 0){
+=======
   if(badGuy.health == 0 | badGuy.health < 0){
+>>>>>>> f6bc39b6249a12e5026ca2b77156f7dfff8b160c
     badGuy.remove()
     score++;
   }
