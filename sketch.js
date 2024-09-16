@@ -116,6 +116,14 @@ function draw() {
     }
   }
   //prevent use of shooting/restarting/debug keys when in shop
+  if(keyboard.presses('space')){
+    if(inShop === false){
+      openShop()
+    }
+    else{
+      closeShop()
+    }
+  }
   if(mouse.presses() | keyboard.presses(' ') & inShop === false){
     if(mouse.presses() & lives > 0 & isGameOver === false ) {
       projectileSpawn();
@@ -150,7 +158,7 @@ function enemyHit(projectile, badGuy){
   boomY = badGuy.y;
   projectile.remove();
   badGuy.health - projDamage;
-  if(badGuy.health <= 0){
+  if(badGuy.health == 0 | badGuy.health < 0){
     badGuy.remove()
     score++;
   }
@@ -158,6 +166,14 @@ function enemyHit(projectile, badGuy){
 function wallHurt(wall, badGuy){
   badGuy.remove();
   lifeLost();
+}
+function openShop(){
+  
+  inShop = true;
+}
+function closeShop(){
+  
+  inShop = false;
 }
 function gameOver(){
   gameOverX = canvas.hw;
