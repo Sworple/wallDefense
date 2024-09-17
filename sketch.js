@@ -134,15 +134,19 @@ function draw() {
   if(mouse.presses() | keyboard.presses(' ') & inShop === false){
     if(mouse.presses() & lives > 0 & isGameOver === false ) {
       projectileSpawn();
+      console.log('projectileSpawn')
     }
     if(mouse.presses() & lives == 0 & isGameOver === true){
       restart();
+      console.log('restart')
     }
     if(kb.presses('z')){
       enemySpawn();
+      console.log('enemySpawn')
     }
     if(kb.x >= 30){
       lifeLost()
+      console.log('lifeLost')
     }
   }
 }
@@ -163,10 +167,10 @@ function enemySpawn(){
 function enemyHit(projectile, badGuy){
   boomX = badGuy.x;
   boomY = badGuy.y;
-  badGuy.health = badGuyHealth;
   badGuy.health - projDamage;
+  badGuy.health = badGuyHealth;
   projectile.remove();
-  if(badGuy.health < 0 | badGuy.health == 0){
+  if(badGuyHealth <= 0){
     badGuy.remove()
     score++;
   }
