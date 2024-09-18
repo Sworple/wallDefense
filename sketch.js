@@ -7,11 +7,12 @@ let gameOverX = -500;
 let isGameOver = false;
 let inShop = false;
 let time = 0;
+let time2 = 0;
 let score = 0;
 let lives = 3;
 let projDamage = 1;
 let highScore;
-let enemyHealth = 1;
+let spawnAmount = 1;
 let badGuyHealth = 1;
 
 function  preload(){
@@ -155,25 +156,19 @@ function projectileSpawn(){
   projectile.y = mouseY;
 }
 function enemySpawn(){
-  for(let i = 1; i < random(1,4); i++){
+  for(let i = 1; i < random(1,spawnAmount); i++){
     badGuy = new enemy.Sprite();  
     badGuy.x = canvas.w + (random(50, 150));
     badGuy.y = random(canvas.h-50, 50);
     badGuy.speed = random(1.5,3.5);
-    badGuy.health = enemyHealth;
-  
   }
 }
 function enemyHit(projectile, badGuy){
   boomX = badGuy.x;
   boomY = badGuy.y;
-  badGuy.health - projDamage;
-  badGuy.health = badGuyHealth;
   projectile.remove();
-  if(badGuyHealth <= 0){
-    badGuy.remove()
-    score++;
-  }
+  badGuy.remove()
+  score++;
 }
 function wallHurt(wall, badGuy){
   badGuy.remove();
