@@ -58,8 +58,6 @@ function setup() {
   turret.x = 10;
   turret.y = canvas.hh;
   turret.diameter = 90;
-  turret.mouse.hovers = 
-  turret.mouse.presses
 
   //fireball setup
   proj = new Group();
@@ -70,7 +68,7 @@ function setup() {
   proj.x = 65;
   proj.vel.x = projSpeed;
   //enemy has more than 1 health, need them to not fly around when hit
-  proj.mass = 1;
+  proj.mass = 0.75;
 
   //enemy setup
   enemy = new Group();
@@ -88,6 +86,7 @@ function draw() {
 	clear();
 	background(0,0,75);
   turret.y = mouseY;
+
   stroke('white');
   fill('white');
   textSize(25);
@@ -175,7 +174,7 @@ function wallHurt(wall, badGuy){
   lifeLost();
 }
 function openShop(){
-  
+
   inShop = true;
 }
 function closeShop(){
