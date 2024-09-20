@@ -13,7 +13,6 @@ let lives = 3;
 let projDamage = 1;
 let highScore;
 let spawnAmount = 1;
-let badGuyHealth = 1;
 
 function  preload(){
   turretImg = loadImage('turret.png')
@@ -23,7 +22,7 @@ function  preload(){
 function setup() {
 	Canvas('16:9');
 	frameRate(60);
-  //add sprite cursor in place of this comment
+  //add sprite cursor in place of this comment sooner or later
   highScore = getItem('highScore');
   world.allowSleeping = false;
 
@@ -166,7 +165,7 @@ function enemyHit(projectile, badGuy){
   boomX = badGuy.x;
   boomY = badGuy.y;
   projectile.remove();
-  badGuy.remove()
+  badGuy.remove();
   score++;
 }
 function wallHurt(wall, badGuy){
