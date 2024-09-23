@@ -44,11 +44,11 @@ function setup() {
   bottomWall.stroke = 'black';
   bottomWall.fill = 'black';
 
-  //the spinning crosshair
+  //the spin-cooldown crosshair
   crosshair = new Sprite(crosshairImg, canvas.hw, canvas.hh, 'none');
-  crosshair.roationSpeed = 10;
+  crosshair.pixelPerfect = 'true';
 
-  //turret that spits fireballs
+  //turret
   turret = new Sprite(turretImg, 10, canvas.hh, 90, 'none');
 
   //fireball setup
@@ -76,7 +76,7 @@ function setup() {
 }
 function draw() {
 	clear();
-	background(20,0,75);
+	background(0, 51, 102);
 
   turret.y = mouseY;
   crosshair.x = mouseX;
@@ -113,7 +113,6 @@ function draw() {
         enemySpawn();
       }
       if(time2 == random(3,7)){
-        enemyHealth++;
         enemySpeed += 0.5;
       }
     }
