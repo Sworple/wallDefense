@@ -1,6 +1,6 @@
 let projSpeed = 5;
-let projectile, proj, enemy, badGuy, wall, topWall, bottomWall;
-let turretImg, projImg, enemyImg;
+let projectile, proj, enemy, badGuy, wall, topWall, bottomWall, crosshair;
+let turretImg, projImg, enemyImg, crosshairImg;
 let boomX = -500;
 let boomY = 0;
 let gameOverX = -500;
@@ -11,29 +11,26 @@ let time2 = 0;
 let score = 0;
 let lives = 3;
 let projDamage = 1;
+let enemySpeed = 1;
 let highScore;
-let spawnAmount = 1;
+let spawnAmount = 2;
 
 function  preload(){
   turretImg = loadImage('turret.png')
   projImg = loadImage('fireball.png')
   enemyImg = loadImage('explosive.png')
+  crosshairImg = loadImage('crosshair.png')
 }
 function setup() {
 	Canvas('16:9');
 	frameRate(60);
-  //add sprite cursor in place of this comment sooner or later
+  noCursor();
   highScore = getItem('highScore');
   world.allowSleeping = false;
 
   //the wall you defend
-  wall = new Sprite();
+  wall = new Sprite(-5, canvas.hh, 50, canvas.h, 'static');
   wall.allowSleeping = false;
-  wall.collider = 'static'
-  wall.x = -5;
-  wall.y = canvas.hh;
-  wall.height = canvas.h;
-  wall.width = 50;
   wall.stroke = 'black';
   wall.strokeWeight = 5;
   wall.fill = 'orange';
@@ -47,16 +44,12 @@ function setup() {
   bottomWall.stroke = 'black';
   bottomWall.fill = 'black';
 
+  //the spinning crosshair
+  crosshair = new Sprite(crosshairImg, canvas.hw, canvas.hh, 'none');
+  crosshair.roationSpeed = 10;
+
   //turret that spits fireballs
-  turret = new Sprite();
-  turret.image = turretImg;
-  turret.collider = 'none';
-  turret.pixelPerfect = true;
-  turret.fill = 'orange';
-  turret.stroke = 'black';
-  turret.x = 10;
-  turret.y = canvas.hh;
-  turret.diameter = 90;
+  turret = new Sprite(turretImg, 10, canvas.hh, 90, 'none');
 
   //fireball setup
   proj = new Group();
@@ -66,7 +59,7 @@ function setup() {
   proj.diameter = 64;
   proj.x = 65;
   proj.vel.x = projSpeed;
-  //enemy has more than 1 health, need them to not fly around when hit
+  //need enemies to not fly around as much when hit
   proj.mass = 0.75;
 
   //enemy setup
@@ -83,8 +76,11 @@ function setup() {
 }
 function draw() {
 	clear();
-	background(0,0,75);
+	background(20,0,75);
+
   turret.y = mouseY;
+  crosshair.x = mouseX;
+  crosshair.y = mouseY;
 
   stroke('white');
   fill('white');
@@ -94,15 +90,15 @@ function draw() {
   text(`score: ${score}`, 30, canvas.h-50);
   text(`highscore: ${highScore}`, 30, canvas.h-25)
   text(`lives: ${lives}`, 30, 25);
+
   stroke('red');
   fill('red');
   textAlign(CENTER, CENTER);
   text('game over', gameOverX, canvas.hh);
   text(`score: ${score}`, gameOverX, canvas.hh+100);
   text(`highscore: ${highScore}`, gameOverX, canvas.hh+50);
-  
   //explosion
-  //color is already set by the gameOver text
+  //color set by gameOver text
   circle(boomX, boomY, 100);
   boomX = -500;
 
@@ -118,10 +114,12 @@ function draw() {
       }
       if(time2 == random(3,7)){
         enemyHealth++;
+        enemySpeed += 0.5;
       }
     }
   }
   //prevent use of shooting/restarting/debug keys when in shop
+  
   if(keyboard.presses('space')){
     if(inShop === false){
       openShop()
@@ -130,6 +128,7 @@ function draw() {
       closeShop()
     }
   }
+  
   if(mouse.presses() | keyboard.presses(' ') & inShop === false){
     if(mouse.presses() & lives > 0 & isGameOver === false ) {
       projectileSpawn();
@@ -154,11 +153,11 @@ function projectileSpawn(){
   projectile.y = mouseY;
 }
 function enemySpawn(){
-  for(let i = 1; i < random(1,spawnAmount); i++){
+  for(let i = 1; i < spawnAmount; i++){
     badGuy = new enemy.Sprite();  
     badGuy.x = canvas.w + (random(50, 150));
     badGuy.y = random(canvas.h-50, 50);
-    badGuy.speed = random(1.5,3.5);
+    badGuy.speed = enemySpeed;
   }
 }
 function enemyHit(projectile, badGuy){
