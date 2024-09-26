@@ -1,22 +1,15 @@
-let projSpeed = 5;
 let projectile, proj, enemy, badGuy, wall, topWall, bottomWall, crosshair;
 let turretImg, projImg, enemyImg, crosshairImg;
-let boomX = -500;
-let boomY = 0;
+let boomX = -500, boomY = 0;
 let gameOverX = -500;
 let isGameOver = false;
-let inShop = false;
-let time = 0;
-let time2 = 0;
-let time3 = 0;
+let time = 0, time2 = 0, time3 = 0;
 let score = 0;
 let lives = 3;
-let cooldown = 0.5;
-let cooldownAmount = 0.5;
-let projDamage = 1;
-let enemySpeed = 1;
+let cooldown = 0, cooldownAmount = 1.5;
+let projSpeed = 7.5, enemySpeed = 0.5;
 let highScore;
-let spawnAmount = 2;
+let spawnAmount = 1;
 
 function  preload(){
   turretImg = loadImage('assets/turret.png')
@@ -70,6 +63,7 @@ function setup() {
   enemy = new Group();
   enemy.image = enemyImg;
   enemy.scale = 0.9;
+  enemy.isSuperFast = true;
   enemy.image.offset.y = -1
   enemy.image.offset.x = 1;
   enemy.diameter = 64;
@@ -109,7 +103,6 @@ function draw() {
   if(frameCount == 15 & isGameOver === false){
     frameCount = 0;
     //pause the timer system when in shop
-    if(inShop === false){
       time+= 0.25;
       time2+= 0.25;
       time3+= 0.25;
@@ -119,42 +112,47 @@ function draw() {
       }
       if(time2 == 5){
         time2 = 0;
-        enemySpeed += 0.5;
+        enemySpeed += 0.25;
+      }
+      if(time3 == 20){
+        time3 = 0;
+        if(spawmAmount < 6){
+          spawnAmount += 1;
+        }
+        if(cooldownAmount > 0){
+          cooldownAmount -= 0.25
+        }
       }
       if(cooldown > 0){
         cooldown -= 0.25;
       }
     }
-  }
-  if(mouse.presses() | keyboard.presses(' ')){
-    if(mouse.presses()){
-      if(lives > 0 & isGameOver === false & cooldown == 0) {
-        projectileSpawn();
-        console.log('projectileSpawn')
-      }
-      if(lives == 0 & isGameOver === true){
-        restart();
-        console.log('restart')
-      }
-  }
-    if(kb.presses('z')){
-      enemySpawn();
-      console.log('enemySpawn')
+  if(mouse.presses()){
+    if(lives > 0 & isGameOver === false & cooldown == 0) {
+      projectileSpawn();
+      console.log('projectileSpawn')
     }
-    if(kb.x >= 30){
-      lifeLost()
-      console.log('lifeLost')
+    if(lives == 0 & isGameOver === true){
+      restart();
+      console.log('restart')
     }
+  }
+  if(kb.presses('z')){
+    enemySpawn();
+    console.log('debugEnemySpawn')
+  }
+  if(kb.x >= 30){
+    lifeLost()
+    console.log('debugLifeLost')
   }
 }
 function projectileSpawn(){
   projectile = new proj.Sprite();
   projectile.y = mouseY;
   cooldown = cooldownAmount;
-  crosshairRotate();
 }
 function enemySpawn(){
-  for(let i = 1; i < spawnAmount; i++){
+  for(let i = 0; i < spawnAmount; i++){
     badGuy = new enemy.Sprite();  
     badGuy.x = canvas.w + (random(50, 150));
     badGuy.y = random(canvas.h-50, 50);
@@ -178,6 +176,7 @@ function gameOver(){
     highScore = score;
   }
   isGameOver = true;
+  enemySpeed = 0;
   storeItem('highScore', highScore)
   enemy.removeAll();
   proj.removeAll();
@@ -192,6 +191,7 @@ function restart(){
   gameOverX = -500; 
   isGameOver = false;
   frameCount = 0;
+  enemySpeed = 0.5;
   time = 0;
   score = 0;
   lives = 3;
