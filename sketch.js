@@ -19,10 +19,10 @@ let highScore;
 let spawnAmount = 2;
 
 function  preload(){
-  turretImg = loadImage('turret.png')
-  projImg = loadImage('fireball.png')
-  enemyImg = loadImage('explosive.png')
-  crosshairImg = loadImage('crosshair.png')
+  turretImg = loadImage('assets/turret.png')
+  projImg = loadImage('assets/fireball.png')
+  enemyImg = loadImage('assets/explosive.png')
+  crosshairImg = loadImage('assets/crosshair.png')
 }
 function setup() {
 	Canvas(650, 350, 'fullscreen');
